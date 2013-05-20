@@ -1,0 +1,1 @@
+[{"site":"","startswith":"","endswith":"","handler":"base_static"},{"site":"","startswith":"/blog","endswith":".html","handler":"blog_post"}]
