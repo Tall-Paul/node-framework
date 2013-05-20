@@ -1,15 +1,11 @@
 <html>
 <head>
 	{{{js_includes}}}
-	{{#get_blog_post}}id=1,prefix=post{{/get_blog_post}}
-	{{#get_blog_post}}id=2,prefix=post2{{/get_blog_post}}
+	{{{framework_get_object("blog_post",post_id,"post")}}}
 </head>
 <body>
 <div id="post_id"></div>	
 <div id="post_title"></div>
 <div id="post_content"></div>
-<div id="post2_id"></div>	
-<div id="post2_title"></div>
-<div id="post2_content"></div>
 </body>
 </html>

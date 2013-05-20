@@ -1,6 +1,6 @@
 var http = require('http')
   , util = require('util')
-  , mu   = require('mu2')
+  , mu   = require('amulet')
   , sys = require("sys")
   , fs = require("fs");
 
@@ -39,11 +39,12 @@ parser.prototype = {
 		//});
 		
 
-		var stream = mu.compileAndRender(filename,this.view)
-		stream.pipe(response);
-		stream.on('end', function() {
-        	response.end();
-    	});
+		//var stream = mu.compileAndRender(filename,this.view)
+		//stream.pipe(response);
+		//stream.on('end', function() {
+        //	response.end();
+    	//});
+		mu.render(response,[filename],this.view);
 
 	},
 

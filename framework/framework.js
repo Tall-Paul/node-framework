@@ -45,10 +45,7 @@ var sync_model = function(model_file,model_name){
 	sys.puts("Loading: "+model_file+" as "+model_name);
 	models[model_name] = sequelize.import(model_file);
 	models[model_name].sync();
-	//create default tags
-	parser.assign("get_"+model_name,function(text){
-			return client_get_object("blog_post",text);
-	});
+	
 }
 
 var sync_package_models = function(package){
@@ -90,13 +87,16 @@ var cache_package_objects = function(package){
 
 var do_common_assign = function(){
 	parser.assign("js_includes","<script src='http://code.jquery.com/jquery-1.9.1.min.js'></script><script src='/js/framework.js'></script>");
+	parser.assign("framework_get_object",function(obj,id,prefix){
+			return client_get_object(obj,id,prefix);				
+	});
 }
 
-var client_get_object = function(obj,text){
+var client_get_object = function(obj,id,prefix){
 
-	query = query_from_commas(text);
-	var prefix = query['prefix'];
-	var query = "id="+query['id'];	
+	//query = query_from_commas(text);
+	//var prefix = query['prefix'];
+	var query = "id="+id;	
 	return "<script>$(document).ready(function(){ framework_get_object('"+obj+"','"+query+"','"+prefix+"') })</script>";
 }
 
