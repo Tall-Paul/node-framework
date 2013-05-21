@@ -133,8 +133,30 @@ router.prototype = {
 	},
 
 	handle_404: function(site,request,response){
+		response.writeHeader(404, {"Content-Type": "text/html"});
 		var template = process.cwd()+"/sites/"+site+"/www/404.html";
 		framework.parser.display_file(template,response);
+	},
+
+	handle_static: function(full_path,request,response){
+		if (path.extname(full_path) == ".html"){
+			response.writeHeader(404, {"Content-Type": "text/html"});
+			framework.parser.display_file(full_path,response);
+		} else {
+			fs.readFile(full_path, "binary", function(err, file) {    
+                 if(err) {    
+                     response.writeHeader(500, {"Content-Type": "text/plain"});    
+                     response.write(err + "\n");    
+                     response.end();    
+		         }    
+                 else
+		 		 {  
+                    response.writeHeader(200);    
+                    response.write(file, "binary");    
+                    response.end();  
+                 }          
+	     	});
+	     }
 	},
 
 
@@ -169,20 +191,7 @@ router.prototype = {
     	} 
 		fs.exists(full_path,function(exists){
 			if (exists){
-				//sys.puts(full_path);
-				fs.readFile(full_path, "binary", function(err, file) {    
-                 if(err) {    
-                     response.writeHeader(500, {"Content-Type": "text/plain"});    
-                     response.write(err + "\n");    
-                     response.end();    
-		         }    
-                 else
-		 		 {  
-                    response.writeHeader(200);    
-                    response.write(file, "binary");    
-                    response.end();  
-                 }          
-	           });  
+				that.handle_static(full_path,request,response);				  
 			} else {
 				var handled = false;
 				//routing table stuff goes here								v
