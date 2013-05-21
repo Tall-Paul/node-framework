@@ -169,10 +169,15 @@ router.prototype = {
 			request_path = "index.html";
 		var my_path = "sites/"+site+"/www"+request_path;
    		var full_path = path.join(process.cwd(),my_path);
+   		var root_path = path.join(process.cwd(),"sites/"+site+"/www");
+   		if (!full_path.startsWith(root_path)){
+   			this.handle_404(site,request,response);
+   			return;
+   		}
 		var handler = "";
 		var that = this;
 		//object loader
-		if (request_path.startsWith("/object/")){ //TODO:  fix query string handling
+			if (request_path.startsWith("/object/")){ //TODO:  fix query string handling
 			var obj = request_path.substring(8);
 			if (inArray(obj,framework.objects)) //special handler for this in package/models
 				this.get_object(obj,"post_id=1",request,response);
