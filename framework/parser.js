@@ -11,18 +11,26 @@ var parser = module.exports = function(){
 parser.prototype = {
 
 	view: {},
-
+	running: 0,
 	test_string: "",
+	root: "",
 
 	clear: function(){
-		sys.puts("##### clearing view #####");
-		this.view = {};
-		this.renderer = {};
+		mu.emptyCache();
 	},
 
 	assign: function(tag,data){
-		sys.puts("Assigning "+data+" to "+tag);
-		this.view[tag] = data;
+		if (this.running == 0)
+			this.view[tag] = data;
+		else {
+			var cont = {};
+			cont[tag] = data;
+			this.renderer.extendContext(cont);
+		}
+	},
+
+	set_root: function(path){
+		mu.set("root",path)
 	},
 
 	render_object: function(obj,prefix){
@@ -30,38 +38,21 @@ parser.prototype = {
 		return "<script>$(document).ready(function(){framework_load_object_ajax('"+json_string+"','"+prefix+"')});</script>";
 	},
 
-	display_file: function(filename,response){
-		//var that = this;
-		//fs.readFile(filename, function(err, file) {
-		//	var display = mu.render(file, that.view);
-		//	response.writeHeader(200);    
-        //	response.write(display);    
-        //	response.end(); 
-		//});
-		
-
-		//var stream = mu.compileAndRender(filename,this.view)
-		//stream.pipe(response);
-		//stream.on('end', function() {
-        //	response.end();
-    	//});
-		this.response = response;
-
-		var renderer = mu.render(this.response,[filename],this.view,true,function(){
-			sys.puts(filename+" rendered");
-		});
-		this.renderer = renderer;
-		
-		this.filename = filename;
+	display_file: function(filename,response,final){		
+		this.running = 1;
+		var that = this;
+		if (final == true){
+			this.renderer = mu.render(response,[filename],this.view,false,function(){
+				response.end();
+			});
+		} else {
+			this.renderer = mu.render(response,[filename],this.view,true,function(){
+				that.running = 0;	
+				that.clear();
+			});
+		};		
 	},
 
-	extend: function(tag_name,data){
-		var cont = {};
-		cont[tag_name] = data;
-		this.renderer.extendContext(cont);
-		//this.assign(tag,data);
-		//this.renderer.force();
-	},
 
 
 	debug_tags: function(){

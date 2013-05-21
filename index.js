@@ -1,3 +1,3 @@
 var framework = require('./framework/framework.js');
 
-framework.startServer(8125);
+framework.startServer(80);

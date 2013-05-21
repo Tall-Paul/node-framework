@@ -87,23 +87,13 @@ var cache_package_objects = function(package){
 
 var do_common_assign = function(){
 	parser.assign("js_includes","<script src='http://code.jquery.com/jquery-1.9.1.min.js'></script><script src='/js/framework.js'></script>");
-	//parser.assign_func("framework_get_object",function(context,text){
-	//	return text;
-	//});
 	
 	parser.assign("framework_get_object_ajax",function(obj,id,prefix){
 			return client_get_object_ajax(obj,id,prefix);				
 	});
 	parser.assign("framework_get_object",function(obj,id,prefix){
 			return client_get_object(obj,id,prefix);
-	});
-	parser.assign("framework_end",function(){
-		return function(){
-			sys.puts("framework_end called");
-			parser.renderer.force();
-			return "";
-		};
-	});
+	});	
 }
 
 var client_get_object_ajax = function(obj,id,prefix){
@@ -116,7 +106,7 @@ var client_get_object_ajax = function(obj,id,prefix){
 var client_get_object = function(obj,id,prefix){
 	if (parser.view[prefix+"_"+obj] == undefined){
 		models[obj].find({where: {"id":id}}).success(function(post){
-			parser.extend(prefix+"_"+obj,post);
+			parser.assign(prefix+"_"+obj,post);
 		});
 	}
 	return " ";
@@ -139,6 +129,7 @@ exports.startServer =  function(port){
 	sys.puts("##### Loading Routes... #####");
 	router = new router_class(process.cwd()+"/sites");
 	parser = new parser_class();
+	
 	sys.puts("##### Connecting to Database #####");
 	connect_to_database();
 	sys.puts('##### Loading tags #####');

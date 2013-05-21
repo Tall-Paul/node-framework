@@ -2,8 +2,9 @@
 var framework = require(process.cwd()+'/framework/framework.js');
 var sys = require("sys");
 
-exports.handle = function(site,request,response){	
+exports.handle = function(id,site,request,response){	
 		//TODO: need some way of assigning variables before template functions run.
 		framework.parser.assign("post_id","1");
-		framework.parser.display_file(process.cwd()+"/sites/"+site+"/www/templates/blog/post.html",response);         
+		//framework.parser.display_file(process.cwd()+"/sites/"+site+"/www/templates/blog/post.html",response); 
+		framework.router.next_handler(id,site,request,response);        
 }
