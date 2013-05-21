@@ -38,19 +38,13 @@ parser.prototype = {
 		return "<script>$(document).ready(function(){framework_load_object_ajax('"+json_string+"','"+prefix+"')});</script>";
 	},
 
-	display_file: function(filename,response,final){		
+	display_file: function(filename,response){		
 		this.running = 1;
 		var that = this;
-		if (final == true){
-			this.renderer = mu.render(response,[filename],this.view,false,function(){
-				response.end();
-			});
-		} else {
 			this.renderer = mu.render(response,[filename],this.view,true,function(){
 				that.running = 0;	
 				that.clear();
-			});
-		};		
+			});		
 	},
 
 

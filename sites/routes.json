@@ -1,1 +1,1 @@
-[{"id":1,"site":"","startswith":"/blog","endswith":".html","handler":"blog_post"},{"id":2,"site":"default","startswith":"*","endswith":"*","handler":"pages_page"},{"id":3,"site":"default","startswith":"*","endswith":"*","handler":"pages_dummy"}]
+[{"id":1,"site":"","startswith":"/blog","endswith":".html","handler":"blog_post"},{"id":2,"site":"default","startswith":"*","endswith":"*","handler":"pages_page"}]

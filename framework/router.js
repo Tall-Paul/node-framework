@@ -134,7 +134,7 @@ router.prototype = {
 
 	handle_404: function(site,request,response){
 		var template = process.cwd()+"/sites/"+site+"/www/404.html";
-		framework.parser.display_file(template,response,true);
+		framework.parser.display_file(template,response);
 	},
 
 
