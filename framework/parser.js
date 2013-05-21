@@ -17,6 +17,7 @@ parser.prototype = {
 	clear: function(){
 		sys.puts("##### clearing view #####");
 		this.view = {};
+		this.renderer = {};
 	},
 
 	assign: function(tag,data){
@@ -26,11 +27,11 @@ parser.prototype = {
 
 	render_object: function(obj,prefix){
 		var json_string = JSON.stringify(obj);
-		return "<script>$(document).ready(function(){framework_load_object('"+json_string+"','"+prefix+"')});</script>";
+		return "<script>$(document).ready(function(){framework_load_object_ajax('"+json_string+"','"+prefix+"')});</script>";
 	},
 
 	display_file: function(filename,response){
-		var that = this;
+		//var that = this;
 		//fs.readFile(filename, function(err, file) {
 		//	var display = mu.render(file, that.view);
 		//	response.writeHeader(200);    
@@ -44,9 +45,24 @@ parser.prototype = {
 		//stream.on('end', function() {
         //	response.end();
     	//});
-		mu.render(response,[filename],this.view);
+		this.response = response;
 
+		var renderer = mu.render(this.response,[filename],this.view,true,function(){
+			sys.puts(filename+" rendered");
+		});
+		this.renderer = renderer;
+		
+		this.filename = filename;
 	},
+
+	extend: function(tag_name,data){
+		var cont = {};
+		cont[tag_name] = data;
+		this.renderer.extendContext(cont);
+		//this.assign(tag,data);
+		//this.renderer.force();
+	},
+
 
 	debug_tags: function(){
 		sys.puts(JSON.stringify(this.view));

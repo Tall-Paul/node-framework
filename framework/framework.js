@@ -87,17 +87,39 @@ var cache_package_objects = function(package){
 
 var do_common_assign = function(){
 	parser.assign("js_includes","<script src='http://code.jquery.com/jquery-1.9.1.min.js'></script><script src='/js/framework.js'></script>");
+	//parser.assign_func("framework_get_object",function(context,text){
+	//	return text;
+	//});
+	
+	parser.assign("framework_get_object_ajax",function(obj,id,prefix){
+			return client_get_object_ajax(obj,id,prefix);				
+	});
 	parser.assign("framework_get_object",function(obj,id,prefix){
-			return client_get_object(obj,id,prefix);				
+			return client_get_object(obj,id,prefix);
+	});
+	parser.assign("framework_end",function(){
+		return function(){
+			sys.puts("framework_end called");
+			parser.renderer.force();
+			return "";
+		};
 	});
 }
 
-var client_get_object = function(obj,id,prefix){
-
+var client_get_object_ajax = function(obj,id,prefix){
 	//query = query_from_commas(text);
 	//var prefix = query['prefix'];
 	var query = "id="+id;	
 	return "<script>$(document).ready(function(){ framework_get_object('"+obj+"','"+query+"','"+prefix+"') })</script>";
+}
+
+var client_get_object = function(obj,id,prefix){
+	if (parser.view[prefix+"_"+obj] == undefined){
+		models[obj].find({where: {"id":id}}).success(function(post){
+			parser.extend(prefix+"_"+obj,post);
+		});
+	}
+	return " ";
 }
 
 var query_from_commas = function(text){
@@ -109,7 +131,7 @@ var query_from_commas = function(text){
 	});
 	return obj;
 }
- exports.client_get_object = client_get_object;
+ exports.client_get_object_ajax = client_get_object_ajax;
 
 
 
