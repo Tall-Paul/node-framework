@@ -166,8 +166,8 @@ connect()
   .use(function(req, res){
     router.handle(req,res);
   })
- .listen(8125);
-
+ .listen(port);
+sys.puts("server started on "+port);
 /*
 	var server = connect()
   		.use(connect.logger('dev'))
@@ -180,5 +180,5 @@ connect()
 	//http.createServer(function (req, res) {		
 	//	  router.handle(req,res);
 	//}).listen(port);
-	//sys.puts("server started on "+port);	
+	//	
 };
