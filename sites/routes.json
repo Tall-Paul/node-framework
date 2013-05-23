@@ -1,1 +1,1 @@
-[{"id":1,"site":"","startswith":"/blog","endswith":".html","handler":"blog_post"},{"id":2,"site":"default","startswith":"*","endswith":"*","handler":"pages_page"}]
+[{"id":1,"site":"default","startswith":"/admin","endswith":"*","handler":"base_admin"},{"id":2,"site":"default","startswith":"/logout","endswith":"*","handler":"base_logout"},{"id":3,"site":"","startswith":"/blog","endswith":".html","handler":"blog_post"},{"id":4,"site":"default","startswith":"*","endswith":"*","handler":"pages_page"}]

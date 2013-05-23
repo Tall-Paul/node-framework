@@ -1,9 +1,10 @@
 var http = require('http');
 var sys = require('sys');
 var fs = require('fs');
+var connect = require('connect');
+var passport = require('passport');
 var router_class = require('./router.js');
 var parser_class = require(process.cwd()+'/framework/parser.js');
-
 var Sequelize = require('sequelize-mysql').sequelize
 var mysql     = require('sequelize-mysql').mysql
 var sequelize = null;
@@ -112,6 +113,15 @@ var client_get_object = function(obj,id,prefix){
 	return " ";
 }
 
+var isLoggedIn = function(id,site,request,response){
+	if (!request.isAuthenticated()){
+		router.call_handler(id-1,site,"base_login",request,response);
+		return false;
+	} else {
+		return true;
+	}
+}
+
 var query_from_commas = function(text){
 	var parts = text.split(",");
 	obj = {};
@@ -122,7 +132,6 @@ var query_from_commas = function(text){
 	return obj;
 }
  exports.client_get_object_ajax = client_get_object_ajax;
-
 
 
 exports.startServer =  function(port){
@@ -145,9 +154,31 @@ exports.startServer =  function(port){
 	exports.parser = parser;
 	exports.router = router;
 	exports.objects = objects;
+	exports.isLoggedIn = isLoggedIn;	
 
-	http.createServer(function (req, res) {		
-		  router.handle(req,res);
-	}).listen(port);
-	sys.puts("server started on "+port);
+connect()
+  .use(connect.logger('dev'))
+  .use(connect.static('public'))
+  .use(connect.cookieParser())
+  .use(connect.session({secret:'wakajakamadaka'}))
+  .use(passport.initialize())
+  .use(passport.session())
+  .use(function(req, res){
+    router.handle(req,res);
+  })
+ .listen(8125);
+
+/*
+	var server = connect()
+  		.use(connect.logger('dev'))
+  		.use(connect.static('public'))  	
+  		.use(function(req, res){
+    		router.handle(req,res);
+  		})
+ 		.listen(port);
+ 	*/
+	//http.createServer(function (req, res) {		
+	//	  router.handle(req,res);
+	//}).listen(port);
+	//sys.puts("server started on "+port);	
 };

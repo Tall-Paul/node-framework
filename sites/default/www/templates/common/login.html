@@ -1,0 +1,22 @@
+{{>common/header.html}}	
+
+<h2>Login</h2>
+<p>here we use <a href="http://passportjs.org/">Passport</a> to authenticate against a local username / password store, but we could always use an openauth strategy or whatever.</p>  
+
+<p>On this demo site the login credentials are 'admin' and 'testing'</p>
+
+{{{login_message}}}
+<form  method="post">
+    <div>
+        <label>Username:</label>
+        <input type="text" name="username"/>
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" name="password"/>
+    </div>
+    <div>
+        <input type="submit" value="Log In"/>
+    </div>
+</form>
+{{>common/footer.html}}

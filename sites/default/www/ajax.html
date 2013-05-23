@@ -1,0 +1,9 @@
+{{>common/header.html}}	
+	{{{framework_get_object_ajax("pages_page",1,"page")}}
+	<h2>This is an example of an ajax page</h2>
+	<p> the content below  is loaded automatically via ajax using a template tag that looks like this:</p>
+	<p><pre>framework_get_object_ajax("pages_page",1,"page")</pre></p>
+	<br/>
+	<br/>
+	<div id="page_content"></div>
+{{>common/footer.html}}	

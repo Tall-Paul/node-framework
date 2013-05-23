@@ -1,4 +1,10 @@
 {{>common/header.html}}	
 <div id="content_title"><h2>{{handler_page.title}}<h2></div>	
 <div id="content_content">{{{handler_page.content}}}</div>
+{{^user}}
+	You are not currently logged in, you can login <a href="/admin">here</a>
+{{/user}}
+{{#user}}
+	<p>You are currently logged in as {{user.username}}, you can logout <a href="/logout">here</a></p>
+{{/user}}
 {{>common/footer.html}}

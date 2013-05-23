@@ -1,41 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
-<head>
-	{{{js_includes}}}	
-	<link rel="stylesheet" type="text/css" href="/css/screen.css" media="screen" />
-
-<title>Node.JS framework test</title>
-	
-</head>
-<body>
-<div id="container">
-<div id="header">
-	<img src="http://www.tall-paul.co.uk/wp-content/uploads/2012/04/cropped-banner.jpg"/>
-</div>
-<div class="colmask leftmenu">
-	<div class="colleft">
-		<div class="col2">
-			<ul>
-				{{pages_build_menu}}
-				{{{pages_menu}}}
-				<li><a href="/non-existant.html">Non Existant page</a></li>
-				<li><a href="/static.html">Static page</a></li>
-			</ul>
-			<!-- Column 1 start -->
-			<!-- Column 1 end -->
-		</div>
-		<div class="col1">
-<h2>Page not found!!</h2>
-
-
-</div>
-	</div>
-</div>
-
-
-<div id="footer">
-</div>
-</div>
-</body>
-</html>
+{{>common/header.html}}	
+		<h2>This is the 404 Template</h2>
+		<h2>Page not found!!</h2>
+{{>common/footer.html}}

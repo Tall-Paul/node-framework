@@ -69,6 +69,7 @@ router.prototype = {
 	routesfile: "",
 	routes: Array(),
 	sites: Array(),
+	static_cache: {},
 
 	show_routes:  function(){
 		this.routes.forEach(function(route){
@@ -122,14 +123,20 @@ router.prototype = {
 		if (request_path == "/")
 			request_path = "index.html";
 		var that = this;
+		var matched = false;
 		this.routes.forEach(function(route){
-			//sys.puts("next_handler "+current_id+":"+route.id);
+			sys.puts("next_handler loop"+current_id+":"+route.id);
 			if (request_path.startsWith(route.startswith) && request_path.endsWith(route.endswith) && route.id > current_id){
+				sys.puts("matched "+request_path+" to "+route.handler);
 				that.call_handler(route.id,site,route.handler,request,response);
+				matched = true;
 				throw StopIteration; //break us out of the loop
 			}
 		});
-		this.handle_404(site,request,response);
+		if (matched == false){
+			sys.puts("####Hit 404####");
+			this.handle_404(site,request,response);
+		}
 	},
 
 	handle_404: function(site,request,response){
@@ -143,25 +150,29 @@ router.prototype = {
 			response.writeHeader(404, {"Content-Type": "text/html"});
 			framework.parser.display_file(full_path,response);
 		} else {
-			fs.readFile(full_path, "binary", function(err, file) {    
-                 if(err) {    
-                     response.writeHeader(500, {"Content-Type": "text/plain"});    
-                     response.write(err + "\n");    
-                     response.end();    
-		         }    
-                 else
-		 		 {  
-                    response.writeHeader(200);    
-                    response.write(file, "binary");    
-                    response.end();  
-                 }          
-	     	});
-	     }
-	},
+				that = this;
+				fs.readFile(full_path, "binary", function(err, file) {    
+                	 if(err) {    
+                    	response.writeHeader(500, {"Content-Type": "text/plain"});    
+                     	response.write(err + "\n");    
+                     	response.end();    
+		         	}    
+                 	else
+		 		 	{  
+                    	response.writeHeader(200);    
+                    	response.write(file, "binary");    
+                    	response.end();  
+                 	}          
+	     		});	     	
+		}
+},
 
 
-	handle: function(request,response){
+	handle: function(request,response){		
 		//work out which site we're looking at here
+		if (!request.isAuthenticated()){
+			framework.parser.view.user = false;
+		}		
 		var site = "default";
 		framework.parser.set_root(process.cwd()+"/sites/default/www/templates/");
 		var request_path = url.parse(request.url).pathname;
@@ -179,12 +190,14 @@ router.prototype = {
 		//object loader
 			if (request_path.startsWith("/object/")){ //TODO:  fix query string handling
 			var obj = request_path.substring(8);
-			if (inArray(obj,framework.objects)) //special handler for this in package/models
+			sys.puts(obj);
+			if (inArray(obj,framework.objects)){ //special handler for this in package/objects
 				this.get_object(obj,"post_id=1",request,response);
+			}
 			else {
-				framework.models[obj].find(url.parse(request.url).id).success(function(post){
+				framework.models[obj].find(url.parse(request.url,true).query.id).success(function(obje){
 					response.writeHead( 200 );
-        			response.write(JSON.stringify(post));
+        			response.write(JSON.stringify(obje));
         			response.end();
 				});
 			}
